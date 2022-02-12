@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path'
 import logger from 'morgan'
 import db from '@db/connection'
-import bookRouter from '@routes/book/router'
+// import bookRouter from '@routes/book/router'
 import authorRouter from '@routes/author/router'
 import cors from 'cors'
 
@@ -17,7 +17,7 @@ async function init() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use('/books', bookRouter);
+  // app.use('/books', bookRouter);
   app.use('/authors', authorRouter);
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {

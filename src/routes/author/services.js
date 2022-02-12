@@ -1,71 +1,36 @@
-import Admin from '@db/schemas/admin'
-import * as hash from '@services/hash'
-import { generateAccessToken } from '@services/token'
-export const addAdmin = async ({ full_name, email, phone_number, password }) => {
-    const newAdmin = await Admin.create({
-        full_name,
-        email,
-        phone_number,
-        password
+import Author from '@db/schemas/author'
+export const getAll = async ({ limit = 10, page = 1 }) => {
+    const options = {
+        page,
+        limit,
+        lean: true,
+        sort: { createdAt: -1 }
+    };
+    const authors = await Author.paginate({}, options)
+    return authors;
+}
+export const add = async ({ first_name, last_name }) => {
+    const newAuthor = await Author.create({
+        first_name,
+        last_name
     });
-    return newAdmin;
+    return newAuthor;
 };
-export const logIn = async ({ username, password }) => {
-
-    let admin = await Admin.findOne({ $or: [{ email: username.toLowerCase() }, { phone_number: username }] }).lean()
-    if (admin) {
-        const isCorrectPass = hash.compare(password, admin.password);
-        if (isCorrectPass) {
-            admin = {
-                ...admin,
-                isAdmin: true
-            }
-            const token = generateAccessToken({ user: admin })
-            admin = {
-                full_name: admin.full_name,
-                email: admin.email,
-                isAdmin: true,
-                token
-            }
-            return admin;
-        }
+export const getById = async (_id) => {
+    const author = await Author.findOne({ _id });
+    if (!author) {
+        throw { type: 'notFound', message: 'Author does  not  Exist' }
     }
-    throw { message: 'Invalid Credintion' }
-};
-export const getAllAdmins = async ({ searchTerm }) => {
-    let filter = {}
-    if (searchTerm) {
-        filter.$or =
-            [
-                {
-                    email: new RegExp(searchTerm, 'i')
-                },
-                {
-                    phone_number: new RegExp(searchTerm, 'i')
-                },
-                {
-                    full_name: new RegExp(searchTerm, 'i')
-                }
-            ]
-    }
-    const admins = await Admin.find(filter).select({ password: 0 });
-    return admins;
+    return author;
 }
-export const updateAdmin = async ({ full_name, email, phone_number, _id }) => {
-    const admin = await Admin.findOne({ _id })
-    if (!admin) {
-        throw { type: 'notFound', message: 'Admin does  not  Exist' }
+export const update = async ({ first_name, last_name, _id }) => {
+    const author = await Author.findOne({ _id })
+    if (!author) {
+        throw { type: 'notFound', message: 'Author does  not  Exist' }
     }
-    const updatedAdmin = await Admin.updateOne({ _id }, {
-        full_name, email, phone_number
+    const updated = await Author.updateOne({ _id }, {
+        first_name,
+        last_name
     })
-    return updatedAdmin;
-}
-export const deleteAdmin = async (_id) => {
-    const admin = await Admin.findOne({ _id })
-    if (!admin) {
-        throw { type: 'notFound', message: 'Admin does  not  Exist' }
-    }
-    await Admin.deleteById(_id)
-    return true;
+    return updated;
 }

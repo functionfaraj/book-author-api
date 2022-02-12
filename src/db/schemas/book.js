@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import mongoose_delete from 'mongoose-delete';
-import { encrypt } from '@services/hash';
+import mongoosePaginate from '../plugins/pagination';
 const BookSchema = new mongoose.Schema({
     name: { type: String, required: true },
     isbn: { type: String,  required: true },
@@ -9,5 +9,6 @@ const BookSchema = new mongoose.Schema({
     { timestamps: true }
 );
 BookSchema.plugin(mongoose_delete, { overrideMethods: 'all' });
-const Book = mongoose.model("Book", BookSchema, "Book");
+BookSchema.plugin(mongoosePaginate)
+const Book = mongoose.model("Book", BookSchema, "Books");
 export default Book;

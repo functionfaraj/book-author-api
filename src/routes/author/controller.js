@@ -1,56 +1,45 @@
 import * as Service from './services'
 import ErrorWrapper from '@utils/errorWrapper'
-export const addAdmin = async (req, res) => {
+export const getAll = async (req, res) => {
     try {
-        const { full_name, email, phone_number, password } = req.body
-        const admin = await Service.addAdmin({ full_name, email, phone_number, password })
-        return res.send({ message: 'New Admin created Successfuly', status: true, admin })
-    } catch (error) {
-        return new ErrorWrapper(error.message).internalServerError(res)
-    }
-};
-export const logIn = async (req, res) => {
-    const { username, password } = req.body
-    try {
-        const admin = await Service.logIn({ username, password })
-        return res.send({ status: true, admin })
-    } catch (error) {
-        return new ErrorWrapper(error.message).internalServerError(res)
-    }
-};
-export const getAllAdmins = async (req, res) => {
-    try {
-        const { searchTerm } = req.query
-        const admins = await Service.getAllAdmins({ searchTerm })
-        return res.send(admins)
+        const { limit, page } = req.body
+        const authors = await Service.getAll({ limit, page })
+        return res.send(authors)
     } catch (error) {
         return new ErrorWrapper(error.message).internalServerError(res)
     }
 }
-export const updateAdmin = async (req, res) => {
-    const { _id } = req.params
-    const { full_name, email, phone_number } = req.body
+export const add = async (req, res) => {
     try {
-        await Service.updateAdmin({ full_name, email, phone_number, _id })
-        res.send({ status: true, message: "Admin updated Successfuly !" })
+        const { first_name, last_name } = req.body
+        const author = await Service.add({ first_name, last_name })
+        return res.send({ message: 'New Author created Successfuly', status: true, author })
+    } catch (error) {
+        return new ErrorWrapper(error.message).internalServerError(res)
+    }
+};
+export const getById = async (req, res) => {
+    try {
+        const { _id } = req.params
+        const author = await Service.getById(_id)
+        return res.send(author)
     } catch (error) {
         if (error.type === 'notFound') {
             return new ErrorWrapper(error.message).notFound(res)
         }
         return new ErrorWrapper(error.message).internalServerError(res)
     }
-
 }
-export const deleteAdmin = async (req, res) => {
+export const update = async (req, res) => {
     const { _id } = req.params
+    const { first_name, last_name } = req.body
     try {
-        await Service.deleteAdmin(_id)
-        res.send({ status: true, message: "Admin Deleted Successfuly !" })
+        await Service.update({ first_name, last_name, _id })
+        res.send({ status: true, message: "Author updated Successfuly !" })
     } catch (error) {
         if (error.type === 'notFound') {
             return new ErrorWrapper(error.message).notFound(res)
         }
         return new ErrorWrapper(error.message).internalServerError(res)
     }
-
 }
