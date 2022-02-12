@@ -1,1 +1,1 @@
-# book-author-api
+# amaritna-api
