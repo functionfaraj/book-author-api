@@ -1,4 +1,6 @@
 import Book from '@db/schemas/book'
+import Author from '@db/schemas/author'
+
 export const getAll = async ({ limit = 10, page = 1 }) => {
     const options = {
         page,
@@ -35,4 +37,13 @@ export const update = async ({ name, isbn, author, _id }) => {
         author
     })
     return updated;
+}
+export const validateAuthorId = async (author) => {
+    console.log({ author })
+    const authorF = await Author.findOne({ _id: author })
+    if (!authorF) {
+        throw new Error(
+            'Author not exit')
+    }
+    return true
 }
