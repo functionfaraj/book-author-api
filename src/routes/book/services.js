@@ -33,12 +33,12 @@ export const update = async ({ name, isbn, author, _id }) => {
     if (!book) {
         throw { type: 'notFound', message: 'Book does  not  Exist' }
     }
-    const updated = await Book.updateOne({ _id }, {
+    await Book.updateOne({ _id }, {
         name,
         isbn,
         author
     })
-    return updated;
+    return await getById(_id);
 }
 export const validateAuthorId = async (author) => {
     console.log({ author })
