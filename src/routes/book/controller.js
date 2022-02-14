@@ -2,7 +2,7 @@ import * as Service from './services'
 import ErrorWrapper from '@utils/errorWrapper'
 export const getAll = async (req, res) => {
     try {
-        const { limit, page } = req.body
+        const { limit, page } = req.query
         const books = await Service.getAll({ limit, page })
         return res.send(books)
     } catch (error) {

@@ -2,10 +2,12 @@ import Book from '@db/schemas/book'
 import Author from '@db/schemas/author'
 
 export const getAll = async ({ limit = 10, page = 1 }) => {
+    console.log('limit,limit', limit)
     const options = {
         page,
         limit,
         lean: true,
+        populate: 'author',
         sort: { createdAt: -1 }
     };
     const books = await Book.paginate({}, options)

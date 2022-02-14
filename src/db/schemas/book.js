@@ -4,7 +4,7 @@ import mongoosePaginate from '../plugins/pagination';
 const BookSchema = new mongoose.Schema({
     name: { type: String, required: true },
     isbn: { type: String,  required: true },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'Authors' }
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' }
 },
     { timestamps: true }
 );
