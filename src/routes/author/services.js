@@ -9,13 +9,6 @@ export const getAll = async ({ limit = 10, page = 1 }) => {
     const authors = await Author.paginate({}, options)
     return authors;
 }
-export const add = async ({ first_name, last_name }) => {
-    const newAuthor = await Author.create({
-        first_name,
-        last_name
-    });
-    return newAuthor;
-};
 export const getById = async (_id) => {
     const author = await Author.findOne({ _id });
     if (!author) {
@@ -23,14 +16,21 @@ export const getById = async (_id) => {
     }
     return author;
 }
+export const add = async ({ first_name, last_name }) => {
+    const newAuthor = await Author.create({
+        first_name,
+        last_name
+    });
+    return newAuthor;
+};
 export const update = async ({ first_name, last_name, _id }) => {
     const author = await Author.findOne({ _id })
     if (!author) {
         throw { type: 'notFound', message: 'Author does  not  Exist' }
     }
-    const updated = await Author.updateOne({ _id }, {
+    await Author.updateOne({ _id }, {
         first_name,
         last_name
     })
-    return updated;
+    return await getById(_id);
 }

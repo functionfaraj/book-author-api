@@ -34,8 +34,8 @@ export const update = async (req, res) => {
     const { _id } = req.params
     const { first_name, last_name } = req.body
     try {
-        await Service.update({ first_name, last_name, _id })
-        res.send({ status: true, message: "Author updated Successfuly !" })
+        const author = await Service.update({ first_name, last_name, _id })
+        res.send({ status: true, message: "Author updated Successfuly !", author })
     } catch (error) {
         if (error.type === 'notFound') {
             return new ErrorWrapper(error.message).notFound(res)
