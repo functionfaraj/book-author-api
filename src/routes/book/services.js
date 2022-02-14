@@ -13,21 +13,21 @@ export const getAll = async ({ limit = 10, page = 1 }) => {
     const books = await Book.paginate({}, options)
     return books;
 }
+export const getById = async (_id) => {
+    const book = await Book.findOne({ _id }).populate('author');
+    if (!book) {
+        throw { type: 'notFound', message: 'Book does  not  Exist' }
+    }
+    return book;
+}
 export const add = async ({ name, isbn, author }) => {
     const newBook = await Book.create({
         name,
         isbn,
         author
     });
-    return newBook;
+    return await getById(newBook._id);
 };
-export const getById = async (_id) => {
-    const book = await Book.findOne({ _id });
-    if (!book) {
-        throw { type: 'notFound', message: 'Book does  not  Exist' }
-    }
-    return book;
-}
 export const update = async ({ name, isbn, author, _id }) => {
     const book = await Book.findOne({ _id })
     if (!book) {
